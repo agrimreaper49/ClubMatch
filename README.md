@@ -6,7 +6,7 @@ An application to provide UVA students one go-to place to interact with their cl
 
 ## Installation
 
-### **Create a virtual environment in Python 3.10.10**
+### **Create a virtual environment in Python 3.11**
 
 Mac and Linux
 ```shell
