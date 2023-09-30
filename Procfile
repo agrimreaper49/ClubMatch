@@ -1,0 +1,1 @@
+web: guincorn club_compass.wsgi
