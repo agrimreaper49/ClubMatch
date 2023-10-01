@@ -1,1 +1,1 @@
-web: guincorn club_compass.wsgi:application --log-file
+web: gunicorn club_compass.wsgi:application --log-file
