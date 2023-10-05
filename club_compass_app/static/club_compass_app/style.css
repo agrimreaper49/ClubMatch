@@ -1,17 +1,13 @@
 .custom-card {
-    background-color: tan;
-}
-
-.custom-card-header, .custom-card-body {
-    background-color: tan;
-    color: black;
+  background-color: tan;
+  border-radius: 20px;
 }
 
 .custom-card-header {
-    text-align: center;
+  text-align: center;
 }
 
 .text-center h4 {
-    margin-bottom: 3rem;
-    color: black;
+  margin-bottom: 3rem;
+  color: black;
 }
