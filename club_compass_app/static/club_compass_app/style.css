@@ -1,0 +1,17 @@
+.custom-card {
+    background-color: tan;
+}
+
+.custom-card-header, .custom-card-body {
+    background-color: tan;
+    color: black;
+}
+
+.custom-card-header {
+    text-align: center;
+}
+
+.text-center h4 {
+    margin-bottom: 3rem;
+    color: black;
+}

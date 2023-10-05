@@ -9,20 +9,17 @@ bootstrap_javascript %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Club Compass</title>
     <!-- Your Custom CSS -->
-    <link rel="stylesheet" href="{% static 'polls/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'club_compass_app/style.css' %}" />
   </head>
-  <body class="bg-dark d-flex justify-content-center align-items-center vh-100">
+  <body class="bg-dark justify-content-center align-items-center">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <div class="card" style="background-color: tan">
-            <div
-              class="card-header text-black text-center"
-              style="background-color: tan"
-            >
+          <div class="card custom-card">
+            <div class="card-header custom-card-header">
               <h2>Club Compass</h2>
             </div>
-            <div class="card-body" style="background-color: tan">
+            <div class="card-body custom-card-body">
               {% if not user.is_authenticated %}
               <div class="text-center mb-3 text-black">
                 <h4>Google Login</h4>
