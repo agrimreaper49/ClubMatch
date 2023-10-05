@@ -1,6 +1,8 @@
 {% load bootstrap5 %} {% load static %} {% bootstrap_css %} {%
 bootstrap_javascript %}
 
+{% load socialaccount %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,7 +26,7 @@ bootstrap_javascript %}
               <div class="text-center mb-3 text-black">
                 <h4>Google Login</h4>
               </div>
-              <a href="?next=/" class="btn btn-dark w-100">Login with Google</a>
+              <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-dark w-100">Login with Google</a>
               {% else %}
               <p class="text-center">
                 You are signed in as <strong>{{ user.email }}</strong>
