@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'club_compass_app',
+    'bootstrap5',
     # google login settings
     'django.contrib.sites',
     'allauth',
