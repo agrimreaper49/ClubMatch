@@ -5,8 +5,9 @@ from django.db import models
 
 class Club(models.Model):
     name = models.CharField(max_length=100)
+    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     description = models.TextField()
-    members = models.ManyToManyField('auth.User', through='Membership')
+    members = models.ManyToManyField('auth.User', through='Membership', related_name='memberships')
     
     def __str__(self):
         return self.name
@@ -19,9 +20,6 @@ class Membership(models.Model):
     
     def approve(self):
         self.role = 'member'
-        
-    def promote(self):
-        self.role = 'admin'
     
     def __str__(self):
         return self.user.username + ' is ' + self.role + ' of ' + self.club.name

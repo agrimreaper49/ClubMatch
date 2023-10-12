@@ -16,7 +16,12 @@ def index(request):
     else:
         role = 'user'
         
-    return render(request, 'index.html', {'is_superuser': is_superuser, 'role': role})
+    if request.user.is_authenticated:
+        # If the user is authenticated, redirect them to the home page
+        return redirect('/home/')
+        
+    return render(request, 'club_compass_app/accountTypeSelectionScreen.html', {'is_superuser': is_superuser, 'role': role})
+
 
 def logout_view(request):
     # Calls a built in method to log the user out and returns to the home screen
@@ -26,7 +31,7 @@ def logout_view(request):
     
 
 class Home(generic.ListView):
-    template_name = 'home.html'
+    template_name = 'club_compass_app/home.html'
     context_object_name = 'clubs'
     
     def get_queryset(self):
@@ -35,7 +40,7 @@ class Home(generic.ListView):
 
 class ClubDetail(generic.DetailView):
     model = Club
-    template_name = 'club_detail.html'
+    template_name = 'club_compass_app/club_detail.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

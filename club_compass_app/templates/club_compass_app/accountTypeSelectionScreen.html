@@ -1,5 +1,6 @@
-{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {%
-bootstrap_javascript %}
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
+
+{% load socialaccount %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,17 +33,7 @@ bootstrap_javascript %}
   </head>
   <body>
     <h2>Select Account Type</h2>
-    <button class="btn btn-primary" onclick="selectAccountType('User')">
-      User Account
-    </button>
-    <button class="btn btn-secondary" onclick="selectAccountType('Admin')">
-      Admin Account
-    </button>
-
-    <script>
-      function selectAccountType(type) {
-        alert("You have selected " + type + " account.");
-      }
-    </script>
+    <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-primary">User Login with Google</a>
+    <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-primary">Club Login with Google</a>
   </body>
 </html>
