@@ -62,10 +62,14 @@ class Home(UserPassesTestMixin, generic.ListView):
         return Club.objects.filter(membership__user=self.request.user)
     
     def handle_no_permission(self) -> HttpResponseRedirect:
-        return redirect("/")
+        if self.request.user.is_authenticated:
+            return redirect(f"/clubs/{Club.objects.filter(Q(owner=self.request.user))[0].slug}")
+        else:
+            return redirect("/")
     
     def test_func(self):
-        return self.request.user.is_authenticated
+        return self.request.user.is_authenticated and \
+            len(Club.objects.filter(Q(owner=self.request.user))) == 0
     
 
 class ClubDetail(UserPassesTestMixin, generic.DetailView):
