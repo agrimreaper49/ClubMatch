@@ -1,0 +1,34 @@
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
+
+<div class='container-fluid pb-2 bg-light', style="height:100vh">
+    <center>
+    {% if pending_members %}
+        <h1>Members that want to join your club!</h1>
+        <ul>
+            {% for member in pending_members %}
+                <li>
+                    <h6 class="display-6"><small>{{ member.user }}</small></h6>
+                    <button class="btn btn-outline-success" onclick="window.location.href='{% url 'approve_member' member.club.slug member.id %}'">Approve</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No pending members</h3>
+    {% endif %}
+    
+    {% if memberships %}
+        <h1>Your club members</h1>
+        <ul>
+            {% for member in memberships %}
+                <li>
+                    <h6 class="display-6"><small>{{ member.user.username }}</small></h6>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No pending members</h3>
+    {% endif %}
+
+
+    </center>
+</div>

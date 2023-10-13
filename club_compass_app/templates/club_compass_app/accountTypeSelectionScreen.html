@@ -33,7 +33,7 @@
   </head>
   <body>
     <h2>Select Account Type</h2>
-    <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-primary">User Login with Google</a>
-    <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-primary">Club Login with Google</a>
+    <a href="{% provider_login_url 'google' %}?next={% url 'club_login' %}" class="btn btn-primary">Club login with Google</a>
+    <a href="{% provider_login_url 'google' %}?next=" class="btn btn-primary">User login with Google</a>
   </body>
 </html>

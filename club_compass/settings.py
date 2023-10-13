@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-# import django_heroku
-# import dj_database_url
+import django_heroku
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
-SITE_ID = 6
+SITE_ID = 7
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -157,3 +157,7 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/'
+
+# Skips intermediate login page
+SOCIALACCOUNT_LOGIN_ON_GET = True
+

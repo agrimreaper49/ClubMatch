@@ -1,0 +1,22 @@
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
+
+<div class='container-fluid pb-2 bg-light', style="height:100vh">
+    <center>
+    {% if clubs %}
+        <h1 class="display-1">Find New Clubs to Join!</h1>
+        <ul>
+            {% for club in clubs %}
+                <li>
+                    <div class="container bg-warning pb-5 mb-5">
+                        <h2 class="display-3">{{ club.name }}</h2>
+                        <p> {{ club.description }} </p>
+                        <button class="btn btn-outline-dark" onclick="window.location.href='{% url 'join_club' club.slug %}'">JOIN</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No clubs</h3>
+    {% endif %}
+    </center>
+</div>
