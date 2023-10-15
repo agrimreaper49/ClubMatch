@@ -4,3 +4,4 @@ django-heroku
 gunicorn
 django-allauth==0.57.0
 whitenoise==6.5.0
+psycopg2
