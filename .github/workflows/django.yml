@@ -1,12 +1,10 @@
-name: Django
+name: Django Githu
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -17,6 +15,7 @@ jobs:
       matrix:
         python-version: [3.9]
 
+    # https://stackoverflow.com/questions/63066240/setup-postgres-in-github-actions-for-django
     services:
       postgres:
         image: postgres:10.8
@@ -28,18 +27,18 @@ jobs:
           - 5432:5432
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Run Tests
-        run: |
-          python manage.py test
-      env:
-        DJANGO_SETTINGS_MODULE: club_compass.settings
-        DATABASE_URL: postgres://postgres:postgres@localhost/github_actions
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
+    env:
+      DJANGO_SETTINGS_MODULE: club_compass.settings
+      DATABASE_URL: postgres://postgres:postgres@localhost/github_actions
