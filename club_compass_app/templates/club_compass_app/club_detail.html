@@ -9,6 +9,7 @@
                 <li>
                     <h6 class="display-6"><small>{{ member.user }}</small></h6>
                     <button class="btn btn-outline-success" onclick="window.location.href='{% url 'approve_member' member.club.slug member.id %}'">Approve</button>
+                    <button class="btn btn-outline-danger" onclick="window.location.href='{% url 'reject_member' member.club.slug member.id %}'">Reject</button>
                 </li>
             {% endfor %}
         </ul>
@@ -21,12 +22,25 @@
         <ul>
             {% for member in memberships %}
                 <li>
-                    <h6 class="display-6"><small>{{ member.user.username }}</small></h6>
+                    <h6 class="display-6"><small>{{ member }}</small></h6>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
         <h3>No current members</h3>
+    {% endif %}
+
+    {% if rejected_members %}
+        <h1>Rejected Users</h1>
+        <ul>
+            {% for member in rejected_members %}
+                <li>
+                    <h6 class="display-6"><small>{{ member }}</small></h6>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No rejections</h3>
     {% endif %}
 
     <div class="mt-4">

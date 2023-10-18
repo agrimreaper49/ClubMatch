@@ -2,18 +2,64 @@ from __future__ import annotations
 from django.db import models
 from autoslug import AutoSlugField
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 class Club(models.Model):
     name = models.CharField(max_length=100)
-    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    owner = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     description = models.TextField()
     members = models.ManyToManyField('auth.User', through='Membership', related_name='memberships')
-    slug = AutoSlugField(unique_with='id', populate_from='name')
+    events = models.ManyToOneRel('Event', to='Event', field_name='events', related_name='events')
+    tags = models.ManyToManyRel('Tag', to='Tag', related_name='tags')
+    public = models.BooleanField(default=True)
+    slug = AutoSlugField(unique_with='id', populate_from='name') # Displays name in URL
     
+    # Returns true if the user owns a club else False
+    @staticmethod
+    def check_user_owns_club(user: User):
+        return Club.objects.filter(owner=user).exists()
+    
+    @staticmethod
+    def get_club_by_owner(user: User):
+        return Club.objects.filter(owner=user).first()
+    
+    @staticmethod
+    def get_public_clubs():
+        return Club.objects.filter(public=True)
+    
+    # Returns the URL associated with the club
     def get_absolute_url(self):
         return reverse("model_detail", kwargs={"slug": self.slug})
+    
+    def get_members(self):
+        return self.members.filter(membership__role='member')
+    
+    def get_pending_members(self):
+        return self.members.filter(membership__role='pending')
+    
+    def get_rejected_members(self):
+        return self.members.filter(membership__role='rejected')
+    
+    def get_events(self):
+        return self.events.all()
+    
+    def __str__(self):
+        return self.name
+    
+class Tag(models.Model):
+    tag = models.CharField(max_length=100)
+    
+    @staticmethod
+    def validate_tag(tag):
+        if len(tag) == 0:
+            return False
+        elif Tag.objects.filter(tag=tag).exists():
+            return False
+        elif tag.split() > 1: # contains no spaces
+            return False
+        return True
     
     def __str__(self):
         return self.name
@@ -24,11 +70,52 @@ class Membership(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     role = models.CharField(max_length=100, default='pending')
     
+    
+    @staticmethod
+    def get_users_clubs(user: User):
+        return Club.objects.filter(membership__user=user, membership__role='member')
+    
+    @staticmethod
+    def get_users_pending_clubs(user: User):
+        return Club.objects.filter(membership__user=user, membership__role='pending')
+    
+    @staticmethod
+    def get_users_rejected_clubs(user: User):
+        return Club.objects.filter(membership__user=user, membership__role='rejected')
+    
+    @staticmethod
+    def is_user_account(user: User):
+        return Membership.objects.filter(user=user).exists()
+    
     def approve(self):
         self.role = 'member'
+        
+    def reject(self):
+        self.role = 'rejected'
     
     def __str__(self):
         return self.user.username + ' is ' + self.role + ' of ' + self.club.name
+    
+
+class RSVP(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    event = models.ForeignKey('Event', on_delete=models.CASCADE)
+    rsvp = models.BooleanField(default=False)
+    
+    @staticmethod
+    def get_rsvps_for_club(club: Club):
+        return RSVP.objects.filter(event__club=club)
+    
+    @staticmethod
+    def get_rsvps_for_event(event: Event):
+        return RSVP.objects.filter(event=event)
+    
+    @staticmethod
+    def get_rsvps_for_user(user: User):
+        return RSVP.objects.filter(user=user)
+    
+    def __str__(self):
+        return self.user.username + ' is ' + self.rsvp + ' for ' + self.event.name
     
 class Event(models.Model):
     name = models.CharField(max_length=100)
@@ -36,6 +123,9 @@ class Event(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    tags = models.ManyToManyRel(Tag, to='Tag', related_name='tags')
+    rsvp_req = models.BooleanField(default=False)
+    rsvps = models.ManyToManyField('auth.User', through='RSVP', related_name='rsvps')
     
     def __str__(self):
         return self.name
