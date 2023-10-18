@@ -15,16 +15,16 @@ jobs:
       matrix:
         python-version: [3.9]
 
-  # https://stackoverflow.com/questions/63066240/setup-postgres-in-github-actions-for-django
-  services:
-    postgres:
-    image: postgres:10.8
-    env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: github_actions
-    ports:
-      - 5432:5432
+    # https://stackoverflow.com/questions/63066240/setup-postgres-in-github-actions-for-django
+    services:
+      postgres:
+      image: postgres:10.8
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: github_actions
+      ports:
+        - 5432:5432
 
     steps:
     - uses: actions/checkout@v3
