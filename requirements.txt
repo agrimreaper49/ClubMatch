@@ -5,3 +5,5 @@ gunicorn
 django-allauth==0.57.0
 whitenoise==6.5.0
 django-autoslug==1.9.9
+psycopg2
+
