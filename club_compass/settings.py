@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["*"]
 
 SITE_ID = 6
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -162,5 +163,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/'
+
+# Skips intermediate login page
+SOCIALACCOUNT_LOGIN_ON_GET = True
+

@@ -1,0 +1,32 @@
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
+
+{% include 'club_compass_app/header.html' %}
+
+
+<div class='container-fluid pb-2 bg-light', style="height:100vh">
+    <center>
+    {% if clubs %}
+    <div class='container-md bg-light'>
+        <h1 class="display-3">Find New Clubs to Join!</h1>
+        <div class="row">
+            {% for club in clubs %}
+            
+            <div class="col-md-4">
+                <div class="card my-5">
+                    <div class="card-header">
+                        <h6 class='display-6'>{{ club.name }}</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"> {{ club.description }} </p>
+                        <button class="btn btn-outline-success" onclick="window.location.href='{% url 'join_club' club.slug %}'">JOIN</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+        <h3>No clubs</h3>
+    {% endif %}
+    </center>
+</div>

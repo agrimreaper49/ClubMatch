@@ -1,0 +1,57 @@
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
+
+<div class='container-fluid pb-2 bg-light', style="height:100vh">
+    <center>
+    {% if pending_members %}
+        <h1>Members that want to join your club!</h1>
+        <ul>
+            {% for member in pending_members %}
+                <li>
+                    <h6 class="display-6"><small>{{ member.user }}</small></h6>
+                    <button class="btn btn-outline-success" onclick="window.location.href='{% url 'approve_member' member.club.slug member.id %}'">Approve</button>
+                    <button class="btn btn-outline-danger" onclick="window.location.href='{% url 'reject_member' member.club.slug member.id %}'">Reject</button>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No pending members</h3>
+    {% endif %}
+    
+    {% if memberships %}
+        <h1>Your club members</h1>
+        <ul>
+            {% for member in memberships %}
+                <li>
+                    <h6 class="display-6"><small>{{ member }}</small></h6>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No current members</h3>
+    {% endif %}
+
+    {% if rejected_members %}
+        <h1>Rejected Users</h1>
+        <ul>
+            {% for member in rejected_members %}
+                <li>
+                    <h6 class="display-6"><small>{{ member }}</small></h6>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No rejections</h3>
+    {% endif %}
+
+    <div class="mt-4">
+        <h1>Add New Events</h1>
+        <button class="btn btn-primary">Add Event</button>
+    </div>
+
+    <div class="mt-4">
+        <h1>Send Message to All Members</h1>
+        <button class="btn btn-primary">Draft Message</button>
+    </div>
+
+    </center>
+</div>

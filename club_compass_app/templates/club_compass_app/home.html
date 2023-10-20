@@ -1,0 +1,20 @@
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
+
+{% load socialaccount %}
+
+<head>
+    {% include 'club_compass_app/header.html' %}
+</head>
+
+<center>
+    {% if clubs %}
+        {% for club in clubs %}
+            <p>{{ club.name }}</p>
+        {% endfor %}
+    {% else %}
+        <p>No clubs found</p>
+    {% endif %}
+
+    <a href="{% url 'logout' %}" onclick="logout_view" class="btn btn-secondary">Logout</a>
+
+</center>

@@ -1,20 +1,53 @@
+from typing import Any
+from django.db.models.query import QuerySet
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
+from django.views import generic
+from .models import Club, Membership
+from .forms import ClubForm
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 # Create your views here.
 
-def index(request):
-    # https://stackoverflow.com/questions/11916297/django-detect-admin-login-in-view-or-template 
-    is_superuser = request.user.is_superuser  # Check if the user is a superuser
-    
-    # https://stackoverflow.com/questions/4789021/in-django-how-do-i-check-if-a-user-is-in-a-certain-group#:~:text=You%20can%20access%20the%20groups%20simply%20through%20the%20groups%20attribute%20on%20User%20.&text=then%20user.,%5D%20.
-    # user_roles = [group.name for group in request.user.groups.all()]  # Get all the roles/groups the user is in
-    if request.user.groups.filter(name='admin').exists():
-        role = 'admin'
-    else:
-        role = 'user'
+def login(request):
+    if request.user.is_authenticated:
+        # If the user is authenticated, redirect them to the home page
+        return redirect('/home/')
+    return render(request, 'club_compass_app/accountTypeSelectionScreen.html')
+
+class Login(UserPassesTestMixin, generic.FormView):
+    template_name = "club_compass_app/create_club.html"
+    form_class = ClubForm
+    success_url = "/home/"
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated \
+            and Club.check_user_owns_club(self.request.user) == 0:
+            
+            club_name = form.cleaned_data['club_name']
+            description = form.cleaned_data['description']
+            owner = self.request.user
+            club = Club(name=club_name, description=description, owner=owner)
+            club.save()
+            # TODO add whether to include public or private
+            # TODO add tags
+            return super().form_valid(form)
+        else:
+            return redirect("/")
         
-    return render(request, 'index.html', {'is_superuser': is_superuser, 'role': role})
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect("/")    
+    
+    def test_func(self):
+        if not self.request.user.is_authenticated:
+            return True
+        else:
+            return not Club.check_user_owns_club(self.request.user)\
+            and not Membership.is_user_account(self.request.user)
+        
 
 def logout_view(request):
     # Calls a built in method to log the user out and returns to the home screen
@@ -22,3 +55,79 @@ def logout_view(request):
         logout(request)
         return redirect("/")
     
+
+class Home(UserPassesTestMixin, generic.ListView):
+    template_name = 'club_compass_app/home.html'
+    context_object_name = 'clubs'
+    
+    def get_queryset(self):
+        return Club.objects.filter(membership__user=self.request.user, membership__role='member')
+    
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        if self.request.user.is_authenticated:
+            return redirect(f"/clubs/{Club.get_club_by_owner(self.request.user).slug}")
+        else:
+            return redirect("/")
+    
+    def test_func(self):
+        return self.request.user.is_authenticated and \
+            not Club.check_user_owns_club(self.request.user)
+    
+
+class ClubDetail(UserPassesTestMixin, generic.DetailView):
+    login_url = "/"
+    model = Club
+    template_name = 'club_compass_app/club_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['memberships'] = self.object.get_members()
+        context['pending_members'] = self.object.get_pending_members()
+        context['rejected_members'] = self.object.get_rejected_members()
+        return context
+    
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect("/clubs/")
+    
+    # Checks if the user owns the club
+    def test_func(self):
+        return self.request.user == self.get_object().owner
+    
+class Discover(UserPassesTestMixin, generic.ListView):
+    template_name = 'club_compass_app/discover.html'
+    context_object_name = 'clubs'
+    
+    def get_queryset(self): # shows the user clubs that they are not a member of
+        return Club.get_public_clubs().filter(~Q(membership__user=self.request.user))
+    
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            # If they are logged in and they own a club, redirect them to their club
+            return redirect(f"/clubs/{Club.get_club_by_owner(self.request.user).slug}")
+        else:
+            return redirect("/") # If there not logged in redirect to the login page
+    
+    def test_func(self):
+        return self.request.user.is_authenticated and \
+            not Club.check_user_owns_club(self.request.user)
+    
+@login_required
+def join_club(request, slug):
+    club = Club.objects.filter(Q(slug=slug))[0]
+    Membership(user=request.user, club=club).save()
+    return redirect("/home/")
+
+@login_required
+def approve_member(request, slug, pk):
+    membership = Membership.objects.get(pk=pk)
+    membership.approve()
+    membership.save()
+    return redirect(f"/clubs/{slug}")
+
+@login_required
+def reject_member(request, slug, pk):
+    membership = Membership.objects.get(pk=pk)
+    membership.reject()
+    membership.save()
+    return redirect(f"/clubs/{slug}")
+
