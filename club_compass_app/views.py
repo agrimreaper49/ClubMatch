@@ -90,17 +90,17 @@ class ClubDetail(UserPassesTestMixin, generic.DetailView):
         return redirect("/clubs/")
     
     # Checks if the user owns the club
-    def test_func(self) -> bool | None:
+    def test_func(self):
         return self.request.user == self.get_object().owner
     
 class Discover(UserPassesTestMixin, generic.ListView):
     template_name = 'club_compass_app/discover.html'
     context_object_name = 'clubs'
     
-    def get_queryset(self) -> QuerySet[Any]: # shows the user clubs that they are not a member of
+    def get_queryset(self): # shows the user clubs that they are not a member of
         return Club.get_public_clubs().filter(~Q(membership__user=self.request.user))
     
-    def handle_no_permission(self) -> HttpResponseRedirect:
+    def handle_no_permission(self):
         if self.request.user.is_authenticated:
             # If they are logged in and they own a club, redirect them to their club
             return redirect(f"/clubs/{Club.get_club_by_owner(self.request.user).slug}")
