@@ -1,5 +1,3 @@
-from typing import Any
-from django.db.models.query import QuerySet
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
@@ -9,6 +7,7 @@ from .forms import ClubForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -84,6 +83,7 @@ class ClubDetail(UserPassesTestMixin, generic.DetailView):
         context['memberships'] = self.object.get_members()
         context['pending_members'] = self.object.get_pending_members()
         context['rejected_members'] = self.object.get_rejected_members()
+        context['club'] = self.get_object()
         return context
     
     def handle_no_permission(self) -> HttpResponseRedirect:
@@ -118,15 +118,17 @@ def join_club(request, slug):
     return redirect("/home/")
 
 @login_required
-def approve_member(request, slug, pk):
-    membership = Membership.objects.get(pk=pk)
+def approve_member(request, slug, user_pk):
+    pending_user = User.objects.get(pk=user_pk)
+    membership = Membership.objects.get(user=pending_user, club__slug=slug)
     membership.approve()
     membership.save()
     return redirect(f"/clubs/{slug}")
 
 @login_required
-def reject_member(request, slug, pk):
-    membership = Membership.objects.get(pk=pk)
+def reject_member(request, slug, user_pk):
+    pending_user = User.objects.get(pk=user_pk)
+    membership = Membership.objects.get(user=pending_user, club__slug=slug)
     membership.reject()
     membership.save()
     return redirect(f"/clubs/{slug}")

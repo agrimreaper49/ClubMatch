@@ -7,9 +7,9 @@
         <ul>
             {% for member in pending_members %}
                 <li>
-                    <h6 class="display-6"><small>{{ member.user }}</small></h6>
-                    <button class="btn btn-outline-success" onclick="window.location.href='{% url 'approve_member' member.club.slug member.id %}'">Approve</button>
-                    <button class="btn btn-outline-danger" onclick="window.location.href='{% url 'reject_member' member.club.slug member.id %}'">Reject</button>
+                    <h6 class="display-6"><small>{{ member }}</small></h6>
+                    <button class="btn btn-outline-success" onclick="window.location.href='{% url 'approve_member' slug=club.slug user_pk=member.id %}'">Approve</button>
+                    <button class="btn btn-outline-danger" onclick="window.location.href='{% url 'reject_member' slug=club.slug user_pk=member.id %}'">Reject</button>
                 </li>
             {% endfor %}
         </ul>
