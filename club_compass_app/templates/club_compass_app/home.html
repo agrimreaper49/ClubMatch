@@ -1,20 +1,23 @@
-{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
-
-{% load socialaccount %}
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %} {% load socialaccount %}
 
 <head>
+    <title>Club Compass</title>
     {% include 'club_compass_app/header.html' %}
 </head>
 
-<center>
-    {% if clubs %}
-        {% for club in clubs %}
-            <p>{{ club.name }}</p>
-        {% endfor %}
-    {% else %}
-        <p>No clubs found</p>
-    {% endif %}
-
-    <a href="{% url 'logout' %}" onclick="logout_view" class="btn btn-secondary">Logout</a>
-
-</center>
+<body class="bg-light">
+    <div class="row p-3">
+      <div class="col-md-8 offset-md-2">
+        {% if clubs %}
+        <h4 class="mb-3">Available Clubs</h4>
+        <ul class="list-group">
+          {% for club in clubs %}
+          <li class="list-group-item">{{ club.name }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <h4 class="mb-3">No Clubs Created Yet...</h4>
+        {% endif %}
+      </div>
+    </div>
+</body>
