@@ -29,9 +29,9 @@ class Login(UserPassesTestMixin, generic.FormView):
             club_name = form.cleaned_data['club_name']
             description = form.cleaned_data['description']
             owner = self.request.user
-            club = Club(name=club_name, description=description, owner=owner)
+            public = form.cleaned_data['public']
+            club = Club(name=club_name, description=description, owner=owner, public=public)
             club.save()
-            # TODO add whether to include public or private
             # TODO add tags
             return super().form_valid(form)
         else:

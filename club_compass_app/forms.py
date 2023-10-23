@@ -8,6 +8,9 @@ class ClubForm(forms.Form):
     description = forms.CharField(label='Enter a little description about your club here', max_length=2000,
                                widget = forms.Textarea(attrs={"class": "form-control",
                                                                 "placeholder": "Enter a description about your club"}))
+    
+    public = forms.BooleanField(label="Make your club public?",
+                                widget = forms.CheckboxInput(attrs={"class": "form-check-input"}), required=False)
 
 
 class EventForm(forms.Form):
