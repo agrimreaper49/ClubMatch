@@ -1,16 +1,16 @@
-{% include 'club_compass_app/header.html' %}
+{% include 'club_compass_app/user_header.html' %}
 <body class="bg-light">
     <div class="row p-3">
       <div class="col-md-8 offset-md-2">
         {% if clubs %}
-        <h4 class="mb-3">Available Clubs</h4>
+        <h4 class="mb-3">My Clubs</h4>
         <ul class="list-group">
           {% for club in clubs %}
           <li class="list-group-item">{{ club.name }}</li>
           {% endfor %}
         </ul>
         {% else %}
-        <h4 class="mb-3">No Clubs Created Yet...</h4>
+        <h4 class="mb-3">No Clubs Joined...</h4>
         {% endif %}
       </div>
     </div>
