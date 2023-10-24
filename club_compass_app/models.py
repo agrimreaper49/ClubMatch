@@ -44,6 +44,12 @@ class Club(models.Model):
     
     def get_events(self):
         return self.events.all()
+
+    def get_desc(self):
+        return self.description
+
+    def get_name(self):
+        return self.name
     
     def __str__(self):
         return self.name

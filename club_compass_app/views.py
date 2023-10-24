@@ -71,7 +71,22 @@ class Home(UserPassesTestMixin, generic.ListView):
     def test_func(self):
         return self.request.user.is_authenticated and \
             not Club.check_user_owns_club(self.request.user)
-    
+
+
+class UserClubDetail(UserPassesTestMixin, generic.DetailView):
+    login_url = "/"
+    model = Club
+    template_name = "club_compass_app/user_club_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["name"] = self.object.get_name()
+        context["description"] = self.object.get_desc()
+        return context
+
+    def test_func(self):
+        return self.request.user in self.get_object().get_members()
+
 
 class ClubDetail(UserPassesTestMixin, generic.DetailView):
     login_url = "/"
