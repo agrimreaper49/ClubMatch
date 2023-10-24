@@ -1,0 +1,12 @@
+{% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
+
+<head>
+    <title>Club Compass</title>
+</head>
+
+<div class="header d-flex justify-content-between p-3">
+    <h2>Club Compass</h2>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+    <a href="{% url 'discover' %}" class="btn btn-secondary">View Clubs</a>
+    <a href="{% url 'logout' %}" onclick="logout_view" class="btn btn-secondary">Logout</a>
+</div>
