@@ -12,7 +12,7 @@ urlpatterns = [
     path('clubs/', views.Discover.as_view(), name="discover"),
     path('clubs/<slug:slug>/join', views.join_club, name='join_club'),
     path('clubs/<slug:slug>/', views.ClubDetail.as_view(), name='club_detail'),
-    path('clubs/<slug:slug>/user', views.UserClubDetail.as_view(), name='club_detail'),
+    path('clubs/<slug:slug>/user', views.UserClubDetail.as_view(), name='user_club_detail'),
     path('clubs/<slug:slug>/approve/<int:user_pk>', views.approve_member, name='approve_member'),
     path('clubs/<slug:slug>/reject/<int:user_pk>', views.reject_member, name='reject_member')
     # Calls a provided logout method to log the user out and returns to the home screen
