@@ -12,6 +12,7 @@ class Club(models.Model):
     owner = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     description = models.TextField()
     members = models.ManyToManyField('auth.User', through='Membership', related_name='memberships')
+    messages = models.ManyToManyField("Message", related_name="messages")
     events = models.ManyToOneRel('Event', to='Event', field_name='events', related_name='events')
     tags = models.ManyToManyRel('Tag', to='Tag', related_name='tags')
     public = models.BooleanField(default=True)
@@ -137,3 +138,9 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Message(models.Model):
+    text = models.CharField(max_length=1000)
+    time_sent = models.DateTimeField()
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
