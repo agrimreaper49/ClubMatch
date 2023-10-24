@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
-SITE_ID = 7
+SITE_ID = 8
 
 
 INSTALLED_APPS = [
