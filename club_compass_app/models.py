@@ -135,7 +135,7 @@ class Event(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    location = models.CharField(max_length=100)
+    location = models.CharField(max_length=100, default="")
     tags = models.ManyToManyRel(Tag, to='Tag', related_name='tags')
     rsvp_req = models.BooleanField(default=False)
     rsvps = models.ManyToManyField('auth.User', through='RSVP', related_name='rsvps')

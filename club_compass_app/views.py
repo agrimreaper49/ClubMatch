@@ -25,6 +25,7 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
     success_url = "/"
 
     def form_valid(self, form):
+        print("event request")
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
             event_name = form.cleaned_data['event_name']
@@ -35,7 +36,7 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
             location = form.cleaned_data['location']
 
             club = Club.get_club_by_owner(self.request.user)
-            print(f"send {event_name} to {club.get_name()}")
+            # print(f"send {event_name} to {club.get_name()}")
             event = Event(name=event_name, description=description_, club=club, start_time = start_time, 
                           end_time=end_time, date=date, location=location)
             event.save()
