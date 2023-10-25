@@ -84,6 +84,9 @@ class UserClubDetail(UserPassesTestMixin, generic.DetailView):
         context["description"] = self.object.get_desc()
         return context
 
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect("/")
+
     def test_func(self):
         return self.request.user in self.get_object().get_members()
 
