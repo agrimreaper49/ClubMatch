@@ -19,6 +19,46 @@ def login(request):
     return render(request, 'club_compass_app/accountTypeSelectionScreen.html')
 
 
+class AddEvent(UserPassesTestMixin, generic.FormView):
+    template_name = "club_compass_app/send_message.html"
+    form_class = MessageForm
+    success_url = "/"
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated \
+                and Club.check_user_owns_club(self.request.user):
+            message_text = form.cleaned_data['message_text']
+            club = Club.get_club_by_owner(self.request.user)
+            print(f"send {message_text} to {club.get_name()}")
+            message = Message(text=message_text, club=club)
+            message.save()
+            club.messages.add(message)
+            # print(club.messages.all())
+            # club_name = form.cleaned_data['club_name']
+            # description = form.cleaned_data['description']
+            # owner = self.request.user
+            # public = form.cleaned_data['public']
+            # club = Club(name=club_name, description=description, owner=owner, public=public)
+            # club.save()
+            return super().form_valid(form)
+        else:
+            return redirect("/")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect("/")
+
+    def test_func(self):
+        if not self.request.user.is_authenticated:
+            return False
+
+        if Membership.is_user_account(self.request.user):
+            return False
+
+        if not Club.check_user_owns_club(self.request.user):
+            return False
+
+        return True
+
 class SendMessage(UserPassesTestMixin, generic.FormView):
     template_name = "club_compass_app/send_message.html"
     form_class = MessageForm

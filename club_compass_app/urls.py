@@ -10,6 +10,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
     path('create_club/', views.Login.as_view(), name='club_login'),
     path('clubs/send_message', views.SendMessage.as_view(), name='send_message'),
+    path('clubs/add_event', views.AddEvent.as_view(), name='add_event'),
+
     path('clubs/', views.Discover.as_view(), name="discover"),
     path('clubs/<slug:slug>/join', views.join_club, name='join_club'),
     path('clubs/<slug:slug>/', views.ClubDetail.as_view(), name='club_detail'),
