@@ -44,3 +44,5 @@ class EventForm(forms.Form):
     location = forms.CharField(label="Enter the location of your event", max_length=100,
                                widget=forms.TextInput(attrs={"class": "form-control",
                                                              "placeholder": "Enter the location of your event"}))
+
+
