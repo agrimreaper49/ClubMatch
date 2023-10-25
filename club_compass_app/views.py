@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views import generic
 from .models import Club, Membership
-from .forms import ClubForm
+from .forms import ClubForm, MessageForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -17,6 +17,43 @@ def login(request):
         # If the user is authenticated, redirect them to the home page
         return redirect('/home/')
     return render(request, 'club_compass_app/accountTypeSelectionScreen.html')
+
+
+class SendMessage(UserPassesTestMixin, generic.FormView):
+    template_name = "club_compass_app/send_message.html"
+    form_class = MessageForm
+    success_url = "/"
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated \
+                and Club.check_user_owns_club(self.request.user):
+            message = form.cleaned_data['message_text']
+            club = Club.get_club_by_owner(self.request.user)
+            print(f"send {message} to {club.get_name()}")
+            # club_name = form.cleaned_data['club_name']
+            # description = form.cleaned_data['description']
+            # owner = self.request.user
+            # public = form.cleaned_data['public']
+            # club = Club(name=club_name, description=description, owner=owner, public=public)
+            # club.save()
+            return super().form_valid(form)
+        else:
+            return redirect("/")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect("/")
+
+    def test_func(self):
+        if not self.request.user.is_authenticated:
+            return False
+
+        if Membership.is_user_account(self.request.user):
+            return False
+
+        if not Club.check_user_owns_club(self.request.user):
+            return False
+
+        return True
 
 
 class Login(UserPassesTestMixin, generic.FormView):
