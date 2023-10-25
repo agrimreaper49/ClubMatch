@@ -1,6 +1,5 @@
 from django import forms
 
-
 class MessageForm(forms.Form):
     message_text = forms.CharField(label="Enter Message", max_length=1000,
                                    widget=forms.Textarea(attrs={"class": "form-control",

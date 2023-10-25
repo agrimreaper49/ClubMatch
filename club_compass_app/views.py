@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views import generic
 from .models import Club, Membership, Message
-from .forms import ClubForm, MessageForm
+from .forms import ClubForm, MessageForm, EventForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -20,8 +20,8 @@ def login(request):
 
 
 class AddEvent(UserPassesTestMixin, generic.FormView):
-    template_name = "club_compass_app/send_message.html"
-    form_class = MessageForm
+    template_name = "club_compass_app/add_event.html"
+    form_class = EventForm
     success_url = "/"
 
     def form_valid(self, form):
@@ -33,13 +33,6 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
             message = Message(text=message_text, club=club)
             message.save()
             club.messages.add(message)
-            # print(club.messages.all())
-            # club_name = form.cleaned_data['club_name']
-            # description = form.cleaned_data['description']
-            # owner = self.request.user
-            # public = form.cleaned_data['public']
-            # club = Club(name=club_name, description=description, owner=owner, public=public)
-            # club.save()
             return super().form_valid(form)
         else:
             return redirect("/")

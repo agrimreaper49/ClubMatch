@@ -1,0 +1,19 @@
+{% include 'club_compass_app/header.html' %}
+{% load socialaccount %}
+
+<form action="{% url 'add_event' %}" method="post">
+    {% csrf_token %}
+    {% if error_message %}{{ error_message }}{% endif %}
+<center>
+    <div class="container p-3">
+        <h2 class="display-4">Add event to your club!</h2>
+        <div class="form-group">
+            <label class="control-label"><h1 class="display-6"><small><strong>{{ form.message.label }}<strong></small></h1></label>
+            {{ form.message_text }}
+        </div>
+    </div>
+    <div class="container">
+    <input type="submit" class="btn btn-success" value="Submit">
+    </div>
+</center>
+</form>
