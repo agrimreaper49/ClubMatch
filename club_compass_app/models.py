@@ -53,6 +53,9 @@ class Club(models.Model):
     def get_name(self):
         return self.name
 
+    def get_messages(self):
+        return self.messages.all()
+
     def __str__(self):
         return self.name
 
@@ -142,5 +145,5 @@ class Event(models.Model):
 
 class Message(models.Model):
     text = models.CharField(max_length=1000)
-    time_sent = models.DateTimeField()
+    time_sent = models.DateTimeField(auto_now_add=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)

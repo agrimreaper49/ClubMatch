@@ -2,7 +2,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views import generic
-from .models import Club, Membership
+from .models import Club, Membership, Message
 from .forms import ClubForm, MessageForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -27,9 +27,13 @@ class SendMessage(UserPassesTestMixin, generic.FormView):
     def form_valid(self, form):
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
-            message = form.cleaned_data['message_text']
+            message_text = form.cleaned_data['message_text']
             club = Club.get_club_by_owner(self.request.user)
-            print(f"send {message} to {club.get_name()}")
+            print(f"send {message_text} to {club.get_name()}")
+            message = Message(text=message_text, club=club)
+            message.save()
+            club.messages.add(message)
+            # print(club.messages.all())
             # club_name = form.cleaned_data['club_name']
             # description = form.cleaned_data['description']
             # owner = self.request.user
@@ -121,6 +125,7 @@ class UserClubDetail(UserPassesTestMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         context["name"] = self.object.get_name()
         context["description"] = self.object.get_desc()
+        context["messages"] = self.object.get_messages()
         return context
 
     def handle_no_permission(self) -> HttpResponseRedirect:

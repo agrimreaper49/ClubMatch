@@ -4,5 +4,14 @@
     <center>
         <h1>{{ name }}</h1>
         <h2>{{ description }}</h2>
+        {% if messages %}
+        <h4 class="mb-3">Messages</h4>
+        <ul class="list-group">
+          {% for message in messages %}
+{#              TODO: Format#}
+          <li class="list-group-item">{{ message.time_sent }}  {{ message.text }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
     </center>
 </div>
