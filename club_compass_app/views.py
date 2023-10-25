@@ -152,8 +152,13 @@ class Home(UserPassesTestMixin, generic.ListView):
             return redirect("/")
 
     def test_func(self):
-        return self.request.user.is_authenticated and \
-            not Club.check_user_owns_club(self.request.user)
+        if not self.request.user.is_authenticated:
+            return False
+        
+        if Club.check_user_owns_club(self.request.user):
+            return False
+        
+        return True
 
 
 class UserClubDetail(UserPassesTestMixin, generic.DetailView):
@@ -172,6 +177,9 @@ class UserClubDetail(UserPassesTestMixin, generic.DetailView):
         return redirect("/")
 
     def test_func(self):
+        if not self.request.user.is_authenticated:
+            return False
+        
         return self.request.user in self.get_object().get_members()
 
 
@@ -193,8 +201,13 @@ class ClubDetail(UserPassesTestMixin, generic.DetailView):
 
     # Checks if the user owns the club
     def test_func(self):
-        return self.request.user == self.get_object().owner
+        if not self.request.user.is_authenticated:
+            return False
+        
+        if not self.get_object().check_user_owns_club(self.request.user):
+            return False
 
+        return True
 
 class Discover(UserPassesTestMixin, generic.ListView):
     template_name = 'club_compass_app/discover.html'
@@ -211,30 +224,61 @@ class Discover(UserPassesTestMixin, generic.ListView):
             return redirect("/")  # If there not logged in redirect to the login page
 
     def test_func(self):
-        return self.request.user.is_authenticated and \
-            not Club.check_user_owns_club(self.request.user)
+        if not self.request.user.is_authenticated:
+            return False
+        
+        if Club.check_user_owns_club(self.request.user):
+            return False
+        
+        return True
 
 
 @login_required
 def join_club(request, slug):
-    club = Club.objects.filter(Q(slug=slug))[0]
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    club = Club.objects.get(slug=slug)
+    if club is None:
+        return redirect("/")
+    
+    if club.public is False:
+        return redirect("/")
+
+    if Membership.objects.filter(user=request.user, club=club).exists():
+        return redirect("/")
+    
     Membership(user=request.user, club=club).save()
     return redirect("/home/")
 
 
 @login_required
 def approve_member(request, slug, user_pk):
-    pending_user = User.objects.get(pk=user_pk)
-    membership = Membership.objects.get(user=pending_user, club__slug=slug)
-    membership.approve()
-    membership.save()
-    return redirect(f"/clubs/{slug}")
+    if request.user.is_authenticated \
+            and Club.objects.get(slug=slug).check_user_owns_club(request.user):
+        pending_user = User.objects.get(pk=user_pk)
+        membership = Membership.objects.get(user=pending_user, club__slug=slug)
+        membership.approve()
+        membership.save()
+        return redirect(f"/clubs/{slug}")
+    
+    else:
+        return redirect("/")
 
 
 @login_required
 def reject_member(request, slug, user_pk):
-    pending_user = User.objects.get(pk=user_pk)
-    membership = Membership.objects.get(user=pending_user, club__slug=slug)
-    membership.reject()
-    membership.save()
-    return redirect(f"/clubs/{slug}")
+    if request.user.is_authenticated \
+            and Club.check_user_owns_club(request.user):
+        pending_user = User.objects.get(pk=user_pk)
+        membership = Membership.objects.get(user=pending_user, club__slug=slug)
+        membership.reject()
+        membership.save()
+        return redirect(f"/clubs/{slug}")
+    
+    return redirect("/")
+
+
+
+
+
