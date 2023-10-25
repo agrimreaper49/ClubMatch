@@ -23,6 +23,7 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
     template_name = "club_compass_app/add_event.html"
     form_class = EventForm
     success_url = "/"
+    
     def form_invalid(self, form):
         print("Form is invalid!")
         print(form.errors)
@@ -37,18 +38,36 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
             club = Club.get_club_by_owner(self.request.user)
             description_ = form.cleaned_data['description']
             date = form.cleaned_data['date']
-            start_time = form.cleaned_data['start_time']
-            end_time = form.cleaned_data['end_time']
+            
+            start_hour = form.cleaned_data['start_hour']
+            start_minute = form.cleaned_data['start_minute']
+            start_day_night = form.cleaned_data['start_day_night']
+            start_time = self.get_24_hour_time(start_hour, start_minute, start_day_night)
+            
+            end_hour = form.cleaned_data['end_hour']
+            end_minute = form.cleaned_data['end_minute']
+            end_day_night = form.cleaned_data['end_day_night']
+            end_time = self.get_24_hour_time(end_hour, end_minute, end_day_night)
+            
             location = form.cleaned_data['location']
             print(f"send {event_name} to {club.get_name()}")
             club = Club.get_club_by_owner(self.request.user)
-            # print(f"send {event_name} to {club.get_name()}")
             event = Event(name=event_name, description=description_, club=club, start_time = start_time, 
               end_time=end_time, date=date, location=location)
+            print(event.start_time)
+            print(event.end_time)
             event.save()
             return super().form_valid(form)
         else:
             return redirect("/")
+            
+    def get_24_hour_time(self, hour, minute, am_pm):
+        hour = int(hour)
+        if am_pm == "AM" and hour == 12:
+            hour -= 12
+        elif am_pm == "PM" and hour != 12:
+            hour += 12
+        return f"{hour:02d}:{minute}:00"
 
     def handle_no_permission(self) -> HttpResponseRedirect:
         return redirect("/")

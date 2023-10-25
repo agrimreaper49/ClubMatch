@@ -34,20 +34,59 @@
                 {{ form.date }}
             </div>
 
+
             <!-- Start Time -->
-            <div class="form-group">
-                <label class="control-label">{{ form.start_time.label }}</label>
+            <div class='form-group'>
+                <label class="control-label">{{ form.start_hour.label }}</label>
                 {{ form.start_time.errors }}
-                {{ form.start_time }}
+                <div class="row">
+
+                    <!-- Hours -->
+                    <div class="col-sm-auto px-0">
+                        <span class="d-inline-flex">
+                            {{ form.start_hour }}
+                        </span>
+                        <span class="d-inline-flex">:</span>
+                    </div>
+
+                    <!-- Minutes -->
+                    <div class="col-sm-auto px-1">
+                        {{ form.start_minute }}
+                    </div>
+
+                    <!-- AM/PM -->
+                    <div class="col-sm-auto px-3">
+                        {{ form.start_day_night }}
+                    </div>
+                </div>
             </div>
 
             <!-- End Time -->
-            <div class="form-group">
-                <label class="control-label">{{ form.end_time.label }}</label>
+            <div class='form-group'>
+                <label class="control-label">{{ form.end_hour.label }}</label>
                 {{ form.end_time.errors }}
-                {{ form.end_time }}
-            </div>
+                <div class="row">
 
+                    <!-- Hours -->
+                    <div class="col-sm-auto px-0">
+                        <span class="d-inline-flex">
+                            {{ form.end_hour }}
+                        </span>
+                        <span class="d-inline-flex">:</span>
+                    </div>
+
+                    <!-- Minutes -->
+                    <div class="col-sm-auto px-1">
+                        {{ form.end_minute }}
+                    </div>
+
+                    <!-- AM/PM -->
+                    <div class="col-sm-auto px-3">
+                        {{ form.end_day_night }}
+                    </div>
+                </div>
+            </div>
+            
             <!-- Location -->
             <div class="form-group">
                 <label class="control-label">{{ form.location.label }}</label>
