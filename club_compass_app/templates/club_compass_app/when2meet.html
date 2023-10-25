@@ -1,15 +1,15 @@
 {% include 'club_compass_app/header.html' %}
 {% load socialaccount %}
 
-<form action="{% url 'send_message' %}" method="post">
+<form action="{% url 'send_when2meet' %}" method="post">
     {% csrf_token %}
     {% if error_message %}{{ error_message }}{% endif %}
 <center>
     <div class="container p-3">
         <h2 class="display-4">Send When2Meet link!</h2>
         <div class="form-group">
-            <label class="control-label"><h1 class="display-6"><small><strong>{{ form.message.label }}<strong></small></h1></label>
-            {{ form.message_text }}
+            <label class="control-label"><h1 class="display-6"><small><strong>{{ form.event_name.label }}</strong></small></h1></label>
+            {{ form.event_name }}
         </div>
     </div>
     <div class="container">

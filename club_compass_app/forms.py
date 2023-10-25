@@ -1,5 +1,12 @@
 from django import forms
 
+
+class When2MeetForm(forms.Form):
+    event_name = forms.CharField(label="Enter the title of your event", max_length=50,
+                                 widget=forms.TextInput(attrs={"placeholder": "Enter your event name here",
+                                                               "class": "form-control"}))
+
+
 class MessageForm(forms.Form):
     message_text = forms.CharField(label="Enter Message", max_length=1000,
                                    widget=forms.Textarea(attrs={"class": "form-control",
@@ -44,5 +51,3 @@ class EventForm(forms.Form):
     location = forms.CharField(label="Enter the location of your event", max_length=100,
                                widget=forms.TextInput(attrs={"class": "form-control",
                                                              "placeholder": "Enter the location of your event"}))
-
-
