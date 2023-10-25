@@ -1,6 +1,7 @@
 from __future__ import annotations
 from django.db import models
 from autoslug import AutoSlugField
+from datetime import date
 from django.urls import reverse
 from django.contrib.auth.models import User
 
@@ -131,17 +132,19 @@ class RSVP(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.CharField(max_length=2000)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    location = models.CharField(max_length=100, default="")
+    start_time = models.TimeField()      # TimeField for start time
+    end_time = models.TimeField()        # TimeField for end time
+    date = models.DateField(default=date.today)            # DateField for date
+    location = models.CharField(max_length=100, default="Default Location")
     tags = models.ManyToManyRel(Tag, to='Tag', related_name='tags')
     rsvp_req = models.BooleanField(default=False)
     rsvps = models.ManyToManyField('auth.User', through='RSVP', related_name='rsvps')
 
     def __str__(self):
         return self.name
+
 
 
 class Message(models.Model):

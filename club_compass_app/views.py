@@ -23,24 +23,29 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
     template_name = "club_compass_app/add_event.html"
     form_class = EventForm
     success_url = "/"
+    def form_invalid(self, form):
+        print("Form is invalid!")
+        print(form.errors)
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         print("event request")
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
+            
             event_name = form.cleaned_data['event_name']
+            club = Club.get_club_by_owner(self.request.user)
             description_ = form.cleaned_data['description']
             date = form.cleaned_data['date']
             start_time = form.cleaned_data['start_time']
             end_time = form.cleaned_data['end_time']
             location = form.cleaned_data['location']
-
+            print(f"send {event_name} to {club.get_name()}")
             club = Club.get_club_by_owner(self.request.user)
             # print(f"send {event_name} to {club.get_name()}")
             event = Event(name=event_name, description=description_, club=club, start_time = start_time, 
-                          end_time=end_time, date=date, location=location)
+              end_time=end_time, date=date, location=location)
             event.save()
-            club.messages.add(event)
             return super().form_valid(form)
         else:
             return redirect("/")
@@ -66,6 +71,7 @@ class SendMessage(UserPassesTestMixin, generic.FormView):
     success_url = "/"
 
     def form_valid(self, form):
+        print("message request")
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
             message_text = form.cleaned_data['message_text']

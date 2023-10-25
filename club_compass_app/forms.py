@@ -29,20 +29,21 @@ class EventForm(forms.Form):
                                   widget=forms.Textarea(attrs={"class": "form-control",
                                                                "placeholder": "Enter a description about your event"}))
 
-    date = forms.DateField(label="Enter the date of your event",
+    date = forms.DateField(label="Enter the date of your event", 
                            widget=forms.DateInput(attrs={"class": "form-control",
-                                                         "placeholder": "Enter the date of your event"}))
+                                                         "placeholder": "YYYY-MM-DD"}))
 
-    start_time = forms.TimeField(label="Enter the start time of your event",
+    start_time = forms.TimeField(label="Enter the start time of your event", 
                                  widget=forms.TimeInput(attrs={"class": "form-control",
-                                                               "placeholder": "Enter the start time of your event"}))
+                                                               "placeholder": "HH:MM"}))
 
     end_time = forms.TimeField(label="Enter the end time of your event",
                                widget=forms.TimeInput(attrs={"class": "form-control",
-                                                             "placeholder": "Enter the end time of your event"}))
+                                                             "placeholder": "HH:MM"}))
 
     location = forms.CharField(label="Enter the location of your event", max_length=100,
                                widget=forms.TextInput(attrs={"class": "form-control",
                                                              "placeholder": "Enter the location of your event"}))
+
 
 
