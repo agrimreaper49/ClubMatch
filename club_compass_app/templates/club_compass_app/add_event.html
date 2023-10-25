@@ -1,19 +1,64 @@
 {% include 'club_compass_app/header.html' %}
 {% load socialaccount %}
-
+<style>
+    ul, ol {
+        list-style-type: none;
+    }
+</style>
 <form action="{% url 'add_event' %}" method="post">
     {% csrf_token %}
-    {% if error_message %}{{ error_message }}{% endif %}
-<center>
-    <div class="container p-3">
-        <h2 class="display-4">Add event to your club!</h2>
-        <div class="form-group">
-            <label class="control-label"><h1 class="display-6"><small><strong>{{ form.message.label }}<strong></small></h1></label>
-            {{ form.message_text }}
+    {% if error_message %}<div class="alert alert-danger">{{ error_message }}</div>{% endif %}
+    
+    <center>
+        <div class="container p-3">
+            <h2 class="display-4">Add event to your club!</h2>
+            
+            <!-- Event Name -->
+            <div class="form-group">
+                <label class="control-label">{{ form.event_name.label }}</label>
+                {{ form.event_name.errors }}
+                {{ form.event_name }}
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label class="control-label">{{ form.description.label }}</label>
+                {{ form.description.errors }}
+                {{ form.description }}
+            </div>
+
+            <!-- Date -->
+            <div class="form-group">
+                <label class="control-label">{{ form.date.label }}</label>
+                {{ form.date.errors }}
+                {{ form.date }}
+            </div>
+
+            <!-- Start Time -->
+            <div class="form-group">
+                <label class="control-label">{{ form.start_time.label }}</label>
+                {{ form.start_time.errors }}
+                {{ form.start_time }}
+            </div>
+
+            <!-- End Time -->
+            <div class="form-group">
+                <label class="control-label">{{ form.end_time.label }}</label>
+                {{ form.end_time.errors }}
+                {{ form.end_time }}
+            </div>
+
+            <!-- Location -->
+            <div class="form-group">
+                <label class="control-label">{{ form.location.label }}</label>
+                {{ form.location.errors }}
+                {{ form.location }}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="container">
+                <input type="submit" class="btn btn-success" value="Submit">
+            </div>
         </div>
-    </div>
-    <div class="container">
-    <input type="submit" class="btn btn-success" value="Submit">
-    </div>
-</center>
+    </center>
 </form>

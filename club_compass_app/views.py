@@ -2,7 +2,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views import generic
-from .models import Club, Membership, Message
+from .models import Club, Membership, Message, Event
 from .forms import ClubForm, MessageForm, EventForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -27,12 +27,19 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
     def form_valid(self, form):
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
-            message_text = form.cleaned_data['message_text']
+            event_name = form.cleaned_data['event_name']
+            description_ = form.cleaned_data['description']
+            date = form.cleaned_data['date']
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
+            location = form.cleaned_data['location']
+
             club = Club.get_club_by_owner(self.request.user)
-            print(f"send {message_text} to {club.get_name()}")
-            message = Message(text=message_text, club=club)
-            message.save()
-            club.messages.add(message)
+            print(f"send {event_name} to {club.get_name()}")
+            event = Event(name=event_name, description=description_, club=club, start_time = start_time, 
+                          end_time=end_time, date=date, location=location)
+            event.save()
+            club.messages.add(event)
             return super().form_valid(form)
         else:
             return redirect("/")
