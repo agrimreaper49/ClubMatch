@@ -25,6 +25,7 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
     success_url = "/"
 
     def form_valid(self, form):
+        print("test")
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
             event_name = form.cleaned_data['event_name']

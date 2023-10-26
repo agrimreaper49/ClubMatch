@@ -6,6 +6,12 @@ class When2MeetForm(forms.Form):
                                  widget=forms.TextInput(attrs={"placeholder": "Enter your event name here",
                                                                "class": "form-control"}))
 
+    # dates = forms.DateField(label="Meeting Date(s)", widget=forms.DateInput())
+
+    dates = forms.DateField(label="Enter the date of your event",
+                           widget=forms.DateInput(attrs={"class": "form-control",
+                                                         "placeholder": "Enter the date of your event"}))
+
 
 class MessageForm(forms.Form):
     message_text = forms.CharField(label="Enter Message", max_length=1000,
