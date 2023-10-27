@@ -210,6 +210,8 @@ class UserClubDetail(UserPassesTestMixin, generic.DetailView):
         context["name"] = self.object.get_name()
         context["description"] = self.object.get_desc()
         context["messages"] = self.object.get_messages()
+        context['events'] = self.object.get_upcoming_events()
+        context['key'] = settings.GOOGLE_MAPS_API_KEY
         return context
 
     def handle_no_permission(self) -> HttpResponseRedirect:

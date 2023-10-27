@@ -47,6 +47,9 @@ class Club(models.Model):
 
     def get_events(self):
         return self.events.all()
+    
+    def get_upcoming_events(self):
+        return Event.objects.filter(club=self, date__gte=date.today())
 
     def get_desc(self):
         return self.description
