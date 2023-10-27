@@ -1,3 +1,4 @@
+from typing import Any
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
@@ -8,7 +9,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
-
+from django.conf import settings
 
 # Create your views here.
 
@@ -21,8 +22,20 @@ def login(request):
 
 class AddEvent(UserPassesTestMixin, generic.FormView):
     template_name = "club_compass_app/add_event.html"
+    context = {'key': settings.GOOGLE_MAPS_API_KEY}
     form_class = EventForm
     success_url = "/"
+    
+    def get_context_data(self, location_query = None, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['key'] = settings.GOOGLE_MAPS_API_KEY
+        context['location_query'] = location_query if location_query is not None else "UVA" # Default value to set location over UVA
+        return context
+    
+    def query_location(self, location_query):
+        print("running")
+        location_query = location_query.replace(" ", "+")
+        self.get_context_data(location_query)
     
     def form_invalid(self, form):
         print("Form is invalid!")
@@ -303,8 +316,6 @@ def reject_member(request, slug, user_pk):
         return redirect(f"/clubs/{slug}")
     
     return redirect("/")
-
-
 
 
 
