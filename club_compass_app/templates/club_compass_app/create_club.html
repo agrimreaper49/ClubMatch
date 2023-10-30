@@ -1,27 +1,62 @@
-{% include 'club_compass_app/header.html' %}
-{% load socialaccount %}
+{% load bootstrap5 %} {% load static %} {% load socialaccount %}
+{%bootstrap_css%} {% bootstrap_javascript %}
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Club</title>
+  {% include 'club_compass_app/header.html' %}
+</head>
 
+<body>
+  <div class="container p-3">
+    <h2 style="margin-bottom: 25px">Create your Club!</h2>
 
-<form action="{% url 'club_login' %}" method="post">
-    {% csrf_token %}
-    {% if error_message %}{{ error_message }}{% endif %}
-    <div class="container p-3">
-        <center><h2 class="display-4">Create your Club!</h2></center>
-        <div class="form-group">
-            <label class="control-label"><h1 class="display-6"><small><strong>{{ form.club_name.label }}<strong></small></h1></label>
-            {{ form.club_name }}
-        </div>
-        <div class="form-group">
-            <label class="control-label"><h1 class="display-6"><small><strong>{{ form.description.label }}<strong></small></h1></label>
-            {{ form.description }}
-        </div>
-        <div class='form-group'>
-            {{ form.public }}
-            <label class="control-label"><h1 class="display-6"><small><strong>{{ form.public.label }}<strong></small></h1></label>
-        </div>
-    </div>
-    <div class="container">
-    <input type="submit" class="btn btn-success" value="Submit">
-    </div>
-</form>
+    {% if error_message %}
+    <div class="alert alert-danger">{{ error_message }}</div>
+    {% endif %}
+
+    <form action="{% url 'club_login' %}" method="post">
+      {% csrf_token %}
+
+      <div class="form-group" style="margin-bottom: 15px">
+        <label>
+          <h4>
+            <small>
+              <strong>{{ form.club_name.label }}</strong>
+            </small>
+          </h4>
+        </label>
+        {{ form.club_name }}
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px">
+        <label>
+          <h4>
+            <small>
+              <strong>{{ form.description.label }}</strong>
+            </small>
+          </h4>
+        </label>
+        {{ form.description }}
+      </div>
+      <div class="form-group" style="margin-bottom: 15px">
+        {{ form.public }}
+        <label class="control-label">
+          <h4>
+            <small><strong>{{ form.public.label }}</strong></small>
+          </h4>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <input
+          type="submit"
+          class="btn"
+          value="Submit"
+          style="background-color: #3d9970"
+        />
+      </div>
+    </form>
+  </div>
+</body>
