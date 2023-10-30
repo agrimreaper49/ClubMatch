@@ -11,6 +11,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.conf import settings
 
+from .when2meet_api import get_when2meet_link
+
+
 # Create your views here.
 
 
@@ -59,20 +62,16 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
                 and Club.check_user_owns_club(self.request.user):
             event_name = form.cleaned_data['event_name']
             club = Club.get_club_by_owner(self.request.user)
-            start_time, end_time = map(lambda time: time[:2], get_start_end_times_from_form(form))
+            dates = self.request.POST['dates']
+            if type(dates) == str:
+                dates = [dates]
+            print(f"post dates: {dates}")
+            start_time, end_time = map(lambda time: int(time[:2]), get_start_end_times_from_form(form))
 
             print(f"when2meet {event_name} to {club.get_name()} from {start_time} to {end_time}")
             print(f"post data: {self.request.POST}")
-            # message = Message(text=message_text, club=club)
-            # message.save()
-            # club.messages.add(message)
-            # print(club.messages.all())
-            # club_name = form.cleaned_data['club_name']
-            # description = form.cleaned_data['description']
-            # owner = self.request.user
-            # public = form.cleaned_data['public']
-            # club = Club(name=club_name, description=description, owner=owner, public=public)
-            # club.save()
+            when2meet_link = get_when2meet_link(event_name, dates, start_time, end_time)
+            print(when2meet_link)
             return super().form_valid(form)
         else:
             return redirect("/")
