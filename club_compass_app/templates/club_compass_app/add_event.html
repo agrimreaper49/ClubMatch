@@ -34,26 +34,93 @@
                 {{ form.date }}
             </div>
 
+
             <!-- Start Time -->
-            <div class="form-group">
-                <label class="control-label">{{ form.start_time.label }}</label>
+            <div class='form-group'>
+                <label class="control-label">{{ form.start_hour.label }}</label>
                 {{ form.start_time.errors }}
-                {{ form.start_time }}
+                <div class="row">
+
+                    <!-- Hours -->
+                    <div class="col-sm-auto px-0">
+                        <span class="d-inline-flex">
+                            {{ form.start_hour }}
+                        </span>
+                        <span class="d-inline-flex">:</span>
+                    </div>
+
+                    <!-- Minutes -->
+                    <div class="col-sm-auto px-1">
+                        {{ form.start_minute }}
+                    </div>
+
+                    <!-- AM/PM -->
+                    <div class="col-sm-auto px-3">
+                        {{ form.start_day_night }}
+                    </div>
+                </div>
             </div>
 
             <!-- End Time -->
-            <div class="form-group">
-                <label class="control-label">{{ form.end_time.label }}</label>
+            <div class='form-group'>
+                <label class="control-label">{{ form.end_hour.label }}</label>
                 {{ form.end_time.errors }}
-                {{ form.end_time }}
+                <div class="row">
+
+                    <!-- Hours -->
+                    <div class="col-sm-auto px-0">
+                        <span class="d-inline-flex">
+                            {{ form.end_hour }}
+                        </span>
+                        <span class="d-inline-flex">:</span>
+                    </div>
+
+                    <!-- Minutes -->
+                    <div class="col-sm-auto px-1">
+                        {{ form.end_minute }}
+                    </div>
+
+                    <!-- AM/PM -->
+                    <div class="col-sm-auto px-3">
+                        {{ form.end_day_night }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Location -->
+            <div class="row">
+                <label class="control-label">{{ form.location.label }}</label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        {{ form.location.errors }}
+                        {{ form.location }}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class='btn btn-primary' type='button' id='location_button'>View Location</button>
+                    <!-- Updates the g-maps query with the entered location -->
+                    <script>
+                        var location_button = document.getElementById('location_button');
+                        location_button.addEventListener('click', function() {
+                            var location_query = document.getElementById('id_location').value;
+                            var key = '{{key}}';
+                            var url = 'https://www.google.com/maps/embed/v1/place?key=' + key + '&q=' + location_query;
+                            var iframe = document.getElementsByTagName('iframe')[0];
+                            iframe.src = url;
+                        });
+                    </script>
+                </div>
             </div>
 
-            <!-- Location -->
-            <div class="form-group">
-                <label class="control-label">{{ form.location.label }}</label>
-                {{ form.location.errors }}
-                {{ form.location }}
-            </div>
+            <!-- Google Maps -->
+            <iframe
+                width="600"
+                height="600"
+                frameborder="0" style="border:0"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed/v1/place?key={{key}}&q={{location_query}}"
+                allowfullscreen>
+            </iframe>
 
             <!-- Submit Button -->
             <div class="container">

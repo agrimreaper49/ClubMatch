@@ -1,3 +1,4 @@
+from typing import Any
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
@@ -8,7 +9,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
-
+from django.conf import settings
 
 # Create your views here.
 
@@ -63,29 +64,65 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
 
 class AddEvent(UserPassesTestMixin, generic.FormView):
     template_name = "club_compass_app/add_event.html"
+    context = {'key': settings.GOOGLE_MAPS_API_KEY}
     form_class = EventForm
     success_url = "/"
+    
+    def get_context_data(self, location_query = None, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['key'] = settings.GOOGLE_MAPS_API_KEY
+        context['location_query'] = location_query if location_query is not None else "UVA" # Default value to set location over UVA
+        return context
+    
+    def query_location(self, location_query):
+        print("running")
+        location_query = location_query.replace(" ", "+")
+        self.get_context_data(location_query)
+    
+    def form_invalid(self, form):
+        print("Form is invalid!")
+        print(form.errors)
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         print("event request")
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
+            
             event_name = form.cleaned_data['event_name']
+            club = Club.get_club_by_owner(self.request.user)
             description_ = form.cleaned_data['description']
             date = form.cleaned_data['date']
-            start_time = form.cleaned_data['start_time']
-            end_time = form.cleaned_data['end_time']
+            
+            start_hour = form.cleaned_data['start_hour']
+            start_minute = form.cleaned_data['start_minute']
+            start_day_night = form.cleaned_data['start_day_night']
+            start_time = self.get_24_hour_time(start_hour, start_minute, start_day_night)
+            
+            end_hour = form.cleaned_data['end_hour']
+            end_minute = form.cleaned_data['end_minute']
+            end_day_night = form.cleaned_data['end_day_night']
+            end_time = self.get_24_hour_time(end_hour, end_minute, end_day_night)
+            
             location = form.cleaned_data['location']
-
+            print(f"send {event_name} to {club.get_name()}")
             club = Club.get_club_by_owner(self.request.user)
-            # print(f"send {event_name} to {club.get_name()}")
             event = Event(name=event_name, description=description_, club=club, start_time = start_time, 
-                          end_time=end_time, date=date, location=location)
+              end_time=end_time, date=date, location=location)
+            print(event.start_time)
+            print(event.end_time)
             event.save()
-            club.messages.add(event)
             return super().form_valid(form)
         else:
             return redirect("/")
+            
+    def get_24_hour_time(self, hour, minute, am_pm):
+        hour = int(hour)
+        if am_pm == "AM" and hour == 12:
+            hour -= 12
+        elif am_pm == "PM" and hour != 12:
+            hour += 12
+        return f"{hour:02d}:{minute}:00"
 
     def handle_no_permission(self) -> HttpResponseRedirect:
         return redirect("/")
@@ -109,6 +146,7 @@ class SendMessage(UserPassesTestMixin, generic.FormView):
     success_url = "/"
 
     def form_valid(self, form):
+        print("message request")
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
             message_text = form.cleaned_data['message_text']
@@ -215,6 +253,8 @@ class UserClubDetail(UserPassesTestMixin, generic.DetailView):
         context["name"] = self.object.get_name()
         context["description"] = self.object.get_desc()
         context["messages"] = self.object.get_messages()
+        context['events'] = self.object.get_upcoming_events()
+        context['key'] = settings.GOOGLE_MAPS_API_KEY
         return context
 
     def handle_no_permission(self) -> HttpResponseRedirect:
@@ -321,8 +361,6 @@ def reject_member(request, slug, user_pk):
         return redirect(f"/clubs/{slug}")
     
     return redirect("/")
-
-
 
 
 
