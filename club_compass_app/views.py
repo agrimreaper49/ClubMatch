@@ -62,6 +62,7 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
             start_time, end_time = map(lambda time: time[:2], get_start_end_times_from_form(form))
 
             print(f"when2meet {event_name} to {club.get_name()} from {start_time} to {end_time}")
+            print(f"post data: {self.request.POST}")
             # message = Message(text=message_text, club=club)
             # message.save()
             # club.messages.add(message)

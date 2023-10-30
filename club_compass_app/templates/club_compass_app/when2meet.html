@@ -1,7 +1,7 @@
 {% include 'club_compass_app/header.html' %}
 {% load socialaccount %}
 
-<form action="{% url 'send_when2meet' %}" method="post">
+<form id="when2meet_form" action="{% url 'send_when2meet' %}" method="post">
     {% csrf_token %}
     {% if error_message %}{{ error_message }}{% endif %}
 <center>
@@ -52,9 +52,72 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Dates -->
+
+            <div id="dates">
+                <span hidden="hidden" id="invalid_dates">Invalid Dates</span>
+            <div class='form-group' id="date0_group">
+
+                <div class="row">
+
+                    <!-- Hours -->
+                    <div class="col-sm-auto px-0">
+                        <span class="d-inline-flex">
+                            <label class="control-label" for="date" id="date0_label">Date 1: </label>
+                            <input type="text" name="date" id="date0" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="add_date_btn">Add Date</button>
+            </div>
     </div>
     <div class="container">
     <input type="submit" class="btn btn-success" value="Submit">
     </div>
 </center>
 </form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+    current_max_date = 0;
+    dates_div = document.getElementById("dates");
+    add_date_btn = document.getElementById("add_date_btn");
+    add_date_btn.addEventListener("click", ()=>{
+        console.log("test")
+        let next_date_group = document.getElementById("date" + current_max_date + "_group").cloneNode(true);
+        let next_date_label = next_date_group.querySelector("#date" + current_max_date + "_label");
+        let next_date_input = next_date_group.querySelector("#date" + current_max_date);
+        ++current_max_date;
+        next_date_group.id = "date" + current_max_date + "_group";
+        next_date_label.id = "date" + current_max_date + "_label";
+        next_date_label.innerText = "Date " + (current_max_date+1) +": ";
+        next_date_input.id = "date" + current_max_date;
+        next_date_input.value = "";
+
+        dates_div.insertBefore(next_date_group, add_date_btn);
+    });
+    when2meet_form = document.getElementById("when2meet_form");
+    invalid_dates = document.getElementById("invalid_dates");
+    when2meet_form.addEventListener("submit", (e)=>{
+       console.log("submit");
+       let bad_dates = [];
+       for(let i = 0; i <= current_max_date; ++i) {
+           let ith_date_text = document.getElementById("date" + i).value;
+           console.log(ith_date_text);
+           if(!moment(ith_date_text, 'YYYY-MM-DD').isValid()) {
+               bad_dates.push("Date " + (i+1));
+           }
+       }
+
+       if(bad_dates.length > 0) {
+           let invalid_dates_string = "Invalid Dates: " + bad_dates.join(", ");
+           invalid_dates.hidden = false;
+           invalid_dates.innerText = invalid_dates_string;
+           e.preventDefault();
+           return false;
+       }
+
+       return true;
+    });
+</script>
