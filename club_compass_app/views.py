@@ -13,11 +13,39 @@ from django.conf import settings
 
 # Create your views here.
 
+
 def login(request):
     if request.user.is_authenticated:
         # If the user is authenticated, redirect them to the home page
         return redirect('/home/')
     return render(request, 'club_compass_app/accountTypeSelectionScreen.html')
+
+
+def get_24_hour_hour(hour, am_pm):
+    hour = int(hour)
+    if am_pm == "AM" and hour == 12:
+        hour -= 12
+    elif am_pm == "PM" and hour != 12:
+        hour += 12
+    return hour
+
+
+def get_24_hour_time(hour, minute, am_pm):
+    return f"{get_24_hour_hour(hour, am_pm):02d}:{minute}:00"
+
+
+def get_start_end_times_from_form(time_form):
+    start_hour = time_form.cleaned_data.get('start_hour', 'NA')
+    start_minute = time_form.cleaned_data.get('start_minute', 'NA')
+    start_day_night = time_form.cleaned_data.get('start_day_night', 'NA')
+    start_time = get_24_hour_time(start_hour, start_minute, start_day_night)
+
+    end_hour = time_form.cleaned_data.get('end_hour', 'NA')
+    end_minute = time_form.cleaned_data.get('end_minute', 'NA')
+    end_day_night = time_form.cleaned_data.get('end_day_night', 'NA')
+    end_time = get_24_hour_time(end_hour, end_minute, end_day_night)
+
+    return start_time, end_time
 
 
 class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
@@ -31,7 +59,9 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
                 and Club.check_user_owns_club(self.request.user):
             event_name = form.cleaned_data['event_name']
             club = Club.get_club_by_owner(self.request.user)
-            print(f"meet {event_name} to {club.get_name()}")
+            start_time, end_time = map(lambda time: time[:2], get_start_end_times_from_form(form))
+
+            print(f"when2meet {event_name} to {club.get_name()} from {start_time} to {end_time}")
             # message = Message(text=message_text, club=club)
             # message.save()
             # club.messages.add(message)
@@ -93,16 +123,8 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
             club = Club.get_club_by_owner(self.request.user)
             description_ = form.cleaned_data['description']
             date = form.cleaned_data['date']
-            
-            start_hour = form.cleaned_data['start_hour']
-            start_minute = form.cleaned_data['start_minute']
-            start_day_night = form.cleaned_data['start_day_night']
-            start_time = self.get_24_hour_time(start_hour, start_minute, start_day_night)
-            
-            end_hour = form.cleaned_data['end_hour']
-            end_minute = form.cleaned_data['end_minute']
-            end_day_night = form.cleaned_data['end_day_night']
-            end_time = self.get_24_hour_time(end_hour, end_minute, end_day_night)
+
+            start_time, end_time = get_start_end_times_from_form(form)
             
             location = form.cleaned_data['location']
             print(f"send {event_name} to {club.get_name()}")
@@ -115,14 +137,6 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
             return super().form_valid(form)
         else:
             return redirect("/")
-            
-    def get_24_hour_time(self, hour, minute, am_pm):
-        hour = int(hour)
-        if am_pm == "AM" and hour == 12:
-            hour -= 12
-        elif am_pm == "PM" and hour != 12:
-            hour += 12
-        return f"{hour:02d}:{minute}:00"
 
     def handle_no_permission(self) -> HttpResponseRedirect:
         return redirect("/")
