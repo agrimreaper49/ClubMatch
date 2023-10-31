@@ -45,7 +45,7 @@
     {% if clubs %}
     <h2 class="mb-3" style="text-align: center">Your Clubs</h2>
     {% for club in clubs %}
-    <div class="col-auto">
+    <div class="col-auto" style="cursor: pointer;" onclick="window.location.href='{% url 'user_club_detail' club.slug %}'">
       <div class="club-box">
         <div class="club-name">{{ club.name }}</div>
         <div class="club-description">{{ club.description }}</div>
