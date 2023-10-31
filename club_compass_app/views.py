@@ -74,7 +74,8 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
                 and Club.check_user_owns_club(self.request.user):
             event_name = form.cleaned_data['event_name']
             club = Club.get_club_by_owner(self.request.user)
-            dates = self.request.POST['dates']
+            dates = self.request.POST.getlist('dates')
+            print(dates)
             if type(dates) == str:
                 dates = [dates]
             print(f"post dates: {dates}")
