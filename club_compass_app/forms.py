@@ -68,7 +68,8 @@ class EventForm(TimeForm):
 
     date = forms.DateField(label="Enter the date of your event",
                            widget=forms.DateInput(attrs={"class": "form-control",
-                                                         "placeholder": "YYYY-MM-DD"}))
+                                                         "placeholder": "YYYY-MM-DD",
+                                                         'type': 'date'}))
 
     location = forms.CharField(label="Enter the location of your event", max_length=100,
                                widget=forms.TextInput(attrs={"class": "form-control",
