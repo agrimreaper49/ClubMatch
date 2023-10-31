@@ -69,22 +69,15 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
     success_url = "/"
 
     def form_valid(self, form):
-        print("test")
         if self.request.user.is_authenticated \
                 and Club.check_user_owns_club(self.request.user):
             event_name = form.cleaned_data['event_name']
             club = Club.get_club_by_owner(self.request.user)
             dates = self.request.POST.getlist('dates')
-            print(dates)
             if type(dates) == str:
                 dates = [dates]
-            print(f"post dates: {dates}")
             start_time, end_time = map(lambda time: int(time[:2]), get_start_end_times_from_form(form))
-
-            print(f"when2meet {event_name} to {club.get_name()} from {start_time} to {end_time}")
-            print(f"post data: {self.request.POST}")
             when2meet_link = get_when2meet_link(event_name, dates, start_time, end_time)
-            print(when2meet_link)
             send_linked_message(club, f"""A new when2meet link was posted for {event_name}""", when2meet_link)
             return super().form_valid(form)
         else:
