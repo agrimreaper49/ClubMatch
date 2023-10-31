@@ -37,6 +37,18 @@ def get_24_hour_time(hour, minute, am_pm):
     return f"{get_24_hour_hour(hour, am_pm):02d}:{minute}:00"
 
 
+def send_message(club, message_text):
+    message = Message(text=message_text, club=club)
+    message.save()
+    club.messages.add(message)
+
+
+def send_linked_message(club, message_text, link):
+    message = Message(text=message_text, club=club, has_link=True, when2meet_link=link)
+    message.save()
+    club.messages.add(message)
+
+
 def get_start_end_times_from_form(time_form):
     start_hour = time_form.cleaned_data.get('start_hour', 'NA')
     start_minute = time_form.cleaned_data.get('start_minute', 'NA')
@@ -72,6 +84,7 @@ class SendWhen2Meet(UserPassesTestMixin, generic.FormView):
             print(f"post data: {self.request.POST}")
             when2meet_link = get_when2meet_link(event_name, dates, start_time, end_time)
             print(when2meet_link)
+            send_linked_message(club, f"""A new when2meet link was posted for {event_name}""", when2meet_link)
             return super().form_valid(form)
         else:
             return redirect("/")
@@ -166,9 +179,7 @@ class SendMessage(UserPassesTestMixin, generic.FormView):
             message_text = form.cleaned_data['message_text']
             club = Club.get_club_by_owner(self.request.user)
             print(f"send {message_text} to {club.get_name()}")
-            message = Message(text=message_text, club=club)
-            message.save()
-            club.messages.add(message)
+            send_message(club, message_text)
             # print(club.messages.all())
             # club_name = form.cleaned_data['club_name']
             # description = form.cleaned_data['description']

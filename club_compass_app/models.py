@@ -149,8 +149,9 @@ class Event(models.Model):
         return self.name
 
 
-
 class Message(models.Model):
     text = models.CharField(max_length=1000)
     time_sent = models.DateTimeField(auto_now_add=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    has_link = models.BooleanField(default=False)
+    when2meet_link = models.CharField(max_length=200, default="")

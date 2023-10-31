@@ -9,7 +9,11 @@
         <ul class="list-group">
           {% for message in messages %}
 {#              TODO: Format#}
-          <li class="list-group-item">{{ message.time_sent }}  {{ message.text }}</li>
+              {% if message.has_link %}
+                  <li class="list-group-item">{{ message.time_sent }}  {{ message.text }}: <a href="{{ message.when2meet_link }}">Click Here!</a></li>
+              {% else %}
+                  <li class="list-group-item">{{ message.time_sent }}  {{ message.text }}</li>
+              {% endif %}
           {% endfor %}
         </ul>
         {% endif %}
