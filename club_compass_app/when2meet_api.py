@@ -6,7 +6,6 @@ import requests
 
 def get_when2meet_link(event_name: str, dates: List[str], start_hour: int, end_hour: int):
     url = "https://www.when2meet.com/SaveNewEvent.php"
-    print(dates)
     data = {
         "NewEventName": event_name,
         "DateTypes": "SpecificDates",
@@ -15,7 +14,6 @@ def get_when2meet_link(event_name: str, dates: List[str], start_hour: int, end_h
         "NoLaterThan": str(end_hour),
         "TimeZone": "America/New_York"
     }
-    print(data)
     response = requests.post(url, data=data)
 
     text = response.content.decode("utf-8")
