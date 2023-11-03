@@ -20,7 +20,7 @@
 
       .btn {
         padding: 10px 20px;
-        margin: 10px; 
+        margin: 10px;
         border: none;
         cursor: pointer;
         font-size: 16px;
@@ -37,11 +37,12 @@
       }
 
       .typewriter-title h1 {
-        overflow: hidden;
-        border-right: 0.15em solid orange;
-        white-space: nowrap;
-        margin: 0 auto;
-        letter-spacing: 0.15em;
+        display: inline-block; /* Make the h1 element only as wide as the content */
+        overflow: hidden; /* Ensures the content doesn't spill outside the container */
+        border-right: 0.15em solid orange; /* The typewriter cursor */
+        white-space: nowrap; /* Keeps the text on a single line */
+        margin: 0 auto; /* Center the h1 element */
+        letter-spacing: 0.15em; /* Adjust letter spacing for aesthetics */
         animation: typing 3.5s steps(40, end),
           blink-caret 0.75s step-end infinite;
       }
