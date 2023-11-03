@@ -134,12 +134,10 @@ class AddEvent(UserPassesTestMixin, generic.FormView):
             start_time, end_time = get_start_end_times_from_form(form)
             
             location = form.cleaned_data['location']
-            print(f"send {event_name} to {club.get_name()}")
+            room_number = form.cleaned_data['room_number']
             club = Club.get_club_by_owner(self.request.user)
             event = Event(name=event_name, description=description_, club=club, start_time = start_time, 
-              end_time=end_time, date=date, location=location)
-            print(event.start_time)
-            print(event.end_time)
+              end_time=end_time, date=date, location=location, room_number=room_number)
             event.save()
             return super().form_valid(form)
         else:
@@ -172,7 +170,6 @@ class SendMessage(UserPassesTestMixin, generic.FormView):
                 and Club.check_user_owns_club(self.request.user):
             message_text = form.cleaned_data['message_text']
             club = Club.get_club_by_owner(self.request.user)
-            print(f"send {message_text} to {club.get_name()}")
             send_message(club, message_text)
             # print(club.messages.all())
             # club_name = form.cleaned_data['club_name']

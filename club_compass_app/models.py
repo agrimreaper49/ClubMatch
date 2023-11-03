@@ -141,6 +141,7 @@ class Event(models.Model):
     end_time = models.TimeField()        # TimeField for end time
     date = models.DateField(default=date.today)            # DateField for date
     location = models.CharField(max_length=100, default="Default Location")
+    room_number = models.CharField(max_length=10, default="Lobby")
     tags = models.ManyToManyRel(Tag, to='Tag', related_name='tags')
     rsvp_req = models.BooleanField(default=False)
     rsvps = models.ManyToManyField('auth.User', through='RSVP', related_name='rsvps')

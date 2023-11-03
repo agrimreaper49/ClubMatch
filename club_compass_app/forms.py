@@ -74,6 +74,10 @@ class EventForm(TimeForm):
     location = forms.CharField(label="Enter the location of your event", max_length=100,
                                widget=forms.TextInput(attrs={"class": "form-control",
                                                              "placeholder": "Enter the location of your event"}))
+    
+    room_number = forms.CharField(label="Room Number/Name", max_length=10,
+                                  widget=forms.TextInput(attrs={"class": "form-control",
+                                                                "placeholder": "Room Number/Name"}))
 
     start_minute = forms.ChoiceField(label="Enter the start time of your event", choices=MINUTES,
                                      widget=forms.Select(attrs={"class": "form-control"}, choices=MINUTES))

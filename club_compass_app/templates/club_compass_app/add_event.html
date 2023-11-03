@@ -95,25 +95,39 @@
 
       <!-- Location -->
       <div class="form-group" style="margin-bottom: 15px">
-        <label>
-          <h4>
-            <small><strong>{{ form.location.label }}</strong></small>
-          </h4>
-        </label>
-        {{ form.location.errors }}
-        {{ form.location }}
-        <button class='btn btn-primary' type='button' id='location_button' style="margin-top: 15px">View Location</button>
+        <div class="row">
+          <div class="col-md-6">
+            <label>
+              <h4>
+                <small><strong>{{ form.location.label }}</strong></small>
+              </h4>
+            </label>
+            {{ form.location.errors }}
+            {{ form.location }}
+          </div>
+          <div class="col-md-6">
+            <label>
+              <h4>
+                <small><strong>Room Number</strong></small>
+              </h4>
+            </label>
+            {{ form.room_number.errors}}
+            {{ form.room_number }}
+          </div>
+          <button class='btn btn-primary' type='button' id='location_button' style="margin-top: 15px">View Location</button>  
+        </div>
       </div>
-      <script>
-          var location_button = document.getElementById('location_button');
-          location_button.addEventListener('click', function() {
-              var location_query = document.getElementById('id_location').value;
-              var key = '{{key}}';
-              var url = 'https://www.google.com/maps/embed/v1/place?key=' + key + '&q=' + location_query;
-              var iframe = document.getElementsByTagName('iframe')[0];
-              iframe.src = url;
-          });
-      </script>
+
+        <script>
+            var location_button = document.getElementById('location_button');
+            location_button.addEventListener('click', function() {
+                var location_query = document.getElementById('id_location').value;
+                var key = '{{key}}';
+                var url = 'https://www.google.com/maps/embed/v1/place?key=' + key + '&q=' + location_query;
+                var iframe = document.getElementsByTagName('iframe')[0];
+                iframe.src = url;
+            });
+        </script>
 
       <!-- Google Maps -->
       <iframe
