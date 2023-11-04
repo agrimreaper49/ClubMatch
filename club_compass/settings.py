@@ -35,7 +35,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
-SITE_ID = 6
+SITE_ID = os.getenv("SITE_ID")
 
 
 INSTALLED_APPS = [
