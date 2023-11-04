@@ -37,7 +37,6 @@ ALLOWED_HOSTS = ["*"]
 
 SITE_ID = int(os.getenv("SITE_ID"))
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -179,3 +178,23 @@ LOGOUT_REDIRECT_URL = '/'
 # Skips intermediate login page
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+
+# Steps to find site ID:
+#   1) Uncomment code below
+#   2) Copy code below
+#   3) Go to a terminal in the directory of the project
+#   4) Type in `python manage.py shell`
+#   5) Paste in the code below and hit enter
+#   6) Copy the id
+#   7) Paste into the .env file
+#
+#
+# from django.contrib.sites.models import Site
+# target_site = None
+# all_sites = Site.objects.all()
+# for site in all_sites:
+#     if site.domain != "example.com":
+#         target_site = site
+#         break
+#
+# print(f"site: {target_site}, id: {target_site.id}")
