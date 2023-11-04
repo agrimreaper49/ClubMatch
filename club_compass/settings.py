@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
+
 if "HEROKU" in os.environ and os.environ["HEROKU"] == "TRUE":
     import django_heroku
     import dj_database_url
@@ -139,7 +142,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-GOOGLE_MAPS_API_KEY = ''
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 BASE_COUNTRY = 'US'
 
 # Static files (CSS, JavaScript, Images)
