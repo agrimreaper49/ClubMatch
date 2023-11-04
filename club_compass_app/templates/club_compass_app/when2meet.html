@@ -92,7 +92,6 @@
                   class="form-control"
                   placeholder="YYYY-MM-DD"
                   required
-                  id="id_date"
                 />
               </span>
             </div>
@@ -124,19 +123,13 @@
         let next_date_group = document
           .getElementById("date" + current_max_date + "_group")
           .cloneNode(true);
-        let next_date_label = next_date_group.querySelector(
-          "#date" + current_max_date + "_label"
-        );
         let next_date_input = next_date_group.querySelector(
           "#date" + current_max_date
         );
         ++current_max_date;
         next_date_group.id = "date" + current_max_date + "_group";
-        next_date_label.id = "date" + current_max_date + "_label";
-        next_date_label.innerText = "Date " + (current_max_date + 1) + ": ";
         next_date_input.id = "date" + current_max_date;
         next_date_input.value = "";
-
         dates_div.insertBefore(next_date_group, add_date_btn);
       });
     </script>
