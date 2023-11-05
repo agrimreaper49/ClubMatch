@@ -1,20 +1,20 @@
 {% load bootstrap5 %} {% load static %} {% bootstrap_css %} {% bootstrap_javascript %}
 
+<style>
+  .bg-olive-green {
+    background-color: #3d9970;
+  }
+  .btn-black {
+    background-color: #000000;
+    color: #ffffff;
+  }
+  .text-black {
+    color: #000000;
+  }
+</style>
 
-<body>
-    <div class="container-fluid bg-info">
-        <div class="container-lg">
-            <div class="row">
-                <div class="col-sm-4">
-                    Home?
-                </div>
-                <div class="col-sm-4 text-center">
-                    Club Compass
-                </div>
-                <div class="col-sm-4">
-                    <div class="float-end">{% if request.user.is_authenticated %}<a class="btn btn-danger" onclick="logout_view" href="{% url 'logout' %}">Logout</a>{% else %}<a class="btn btn-success" onclick="login" href={% url 'login' %}> </a> {% endif %}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
+<div class="header d-flex justify-content-between p-3 bg-olive-green">
+  <h2 class="text-black">Club Compass</h2>
+    <a href="{% url 'send_when2meet' %}" class="btn btn-black">Send When2Meet</a>
+  <a href="{% url 'logout' %}" onclick="logout_view" class="btn btn-black">Logout</a>
+</div>

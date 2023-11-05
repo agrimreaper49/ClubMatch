@@ -11,8 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-import django_heroku
-import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
+
+if "HEROKU" in os.environ and os.environ["HEROKU"] == "TRUE":
+    import django_heroku
+    import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,8 +35,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
-SITE_ID = 6
-
+SITE_ID = int(os.getenv("SITE_ID"))
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -138,19 +141,25 @@ USE_I18N = True
 
 USE_TZ = True
 
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
+BASE_COUNTRY = 'US'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#django_heroku.settings(locals())
+
+if "HEROKU" in os.environ and os.environ["HEROKU"] == "TRUE":
+    django_heroku.settings(locals())
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'club_compass_app', 'static')]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -169,3 +178,23 @@ LOGOUT_REDIRECT_URL = '/'
 # Skips intermediate login page
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+
+# Steps to find site ID:
+#   1) Uncomment code below
+#   2) Copy code below
+#   3) Go to a terminal in the directory of the project
+#   4) Type in `python manage.py shell`
+#   5) Paste in the code below and hit enter
+#   6) Copy the id
+#   7) Paste into the .env file
+#
+#
+# from django.contrib.sites.models import Site
+# target_site = None
+# all_sites = Site.objects.all()
+# for site in all_sites:
+#     if site.domain != "example.com":
+#         target_site = site
+#         break
+#
+# print(f"site: {target_site}, id: {target_site.id}")
