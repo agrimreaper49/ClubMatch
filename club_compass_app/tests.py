@@ -149,6 +149,7 @@ class FormsTestCase(TestCase):
             'end_hour': '02',  
             'end_day_night': 'PM', 
             'end_minute': '30',
+            'room_number': '101',
         }
         form = EventForm(data=form_data)
         self.assertTrue(form.is_valid())
