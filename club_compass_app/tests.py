@@ -1,3 +1,7 @@
+# Sources:
+# "unittest.mock — mock object library"
+# Python documentation
+# https://docs.python.org/3/library/unittest.mock.html
 from django.test import TestCase
 from unittest.mock import patch
 from .when2meet_api import get_when2meet_link
@@ -191,7 +195,6 @@ class MembershipModelTestCase(TestCase):
         self.assertEqual(str(membership), expected_str)
 
 class TestWhen2Meet(TestCase):
-    # https://docs.python.org/3/library/unittest.mock.html
     @patch('requests.post')
     def test_get_when2meet_link(self, mock_post):
         # Mock the response from requests.post
