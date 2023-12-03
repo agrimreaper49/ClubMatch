@@ -1,7 +1,8 @@
-# Sources:
-# "unittest.mock — mock object library"
-# Python documentation
-# https://docs.python.org/3/library/unittest.mock.html
+# REFERENCES
+# Title: "unittest.mock — mock object library"
+# URL: https://docs.python.org/3/library/unittest.mock.html
+# Software License: PSF LICENSE AGREEMENT
+
 from django.test import TestCase
 from unittest.mock import patch
 from .when2meet_api import get_when2meet_link
