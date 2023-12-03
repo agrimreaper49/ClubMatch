@@ -1,5 +1,6 @@
-# Sources:
-# https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions
+# REFERENCES
+# Title: "Using secrets in GitHub Actions"
+# URL: https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions
 name: Django CI
 
 on:
